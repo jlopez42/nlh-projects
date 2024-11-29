@@ -1,12 +1,16 @@
 package com.nlh.projects.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
+@Entity
 public class Officer {
 
+    @Id
     private Long id;
     private String customer1;
     private String customer2;

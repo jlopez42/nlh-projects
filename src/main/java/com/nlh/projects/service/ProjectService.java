@@ -2,7 +2,6 @@ package com.nlh.projects.service;
 
 import com.nlh.projects.models.Project;
 import com.nlh.projects.payloads.request.ProjectRequest;
-import com.nlh.projects.payloads.response.MessageResponse;
 import com.nlh.projects.payloads.response.ProjectResponse;
 import com.nlh.projects.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +20,12 @@ public class ProjectService {
 
         if(repository.existsByName(request.getProject().getName())){
             Project project = repository.save(request.getProject());
-            return ProjectResponse.builder()
-                    .id(project.getId())
-                    .name(project.getName())
-                    .createdAt(project.getCreatedAt())
-                    .build();
+            return new ProjectResponse("The project has created successfully",
+                     "201",
+                        project.getId(),
+                        project.getName(),
+                        project.getCreatedAt());
         }
-        return (ProjectResponse) MessageResponse.builder().message("The project have been creating")
-                .code("409").build();
+        return new ProjectResponse("The project have been creating","409");
     }
 }
