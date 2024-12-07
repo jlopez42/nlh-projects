@@ -1,7 +1,6 @@
 package com.nlh.projects.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,19 +8,30 @@ import java.util.Date;
 
 @Data
 @Builder
-@Entity
+@Entity(name = "projects")
 public class Project {
 
     @Id
+    @GeneratedValue
     private Long id;
     private String name;
     private String description;
     private Date startDate;
-    //TODO: create database entities
-    //private General general;
-    //private Detail detail;
-    //private Officer officer;
-    //private Extra extra;
+    @OneToOne
+    @JoinColumn(name = "general_id")
+    private General general;
+
+    @OneToOne
+    @JoinColumn(name = "detail_id")
+    private Detail detail;
+
+    @OneToOne
+    @JoinColumn(name = "officer_id")
+    private Officer officer;
+
+    @OneToOne
+    @JoinColumn(name = "extra_id")
+    private Extra extra;
     private Date createdAt;
     private Date updatedAt;
 }

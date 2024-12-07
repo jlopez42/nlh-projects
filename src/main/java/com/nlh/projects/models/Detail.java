@@ -1,16 +1,19 @@
 package com.nlh.projects.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-@Entity
+@Entity(name = "project_details")
 public class Detail {
 
     @Id
+    @GeneratedValue
     private Long id;
     private String type;
     private Integer quantity;
@@ -24,4 +27,7 @@ public class Detail {
     private String area5;
     private String area6;
     private String area7;
+
+    @OneToOne(mappedBy = "detail")
+    private Project project;
 }
