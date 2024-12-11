@@ -1,46 +1,24 @@
 package com.nlh.projects.payloads.response;
 
-
-
-import java.util.Date;
+import java.util.List;
 
 public class ProjectResponse extends MessageResponse{
-    private Long id;
-    private String name;
-    private Date createdAt;
+    private List<Projects> projectList;
 
     public ProjectResponse(String message, String code) {
         super(message, code);
     }
 
-    public ProjectResponse(String message, String code, Long id, String name, Date createdAt) {
+    public ProjectResponse(String message, String code, List<Projects> projectList) {
         super(message, code);
-        this.id = id;
-        this.name = name;
-        this.createdAt = createdAt;
+        this.projectList = projectList;
     }
 
-    public Long getId() {
-        return id;
+    public List<Projects> getProjectList() {
+        return projectList;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setProjectList(List<Projects> projectList) {
+        this.projectList = projectList;
     }
 }

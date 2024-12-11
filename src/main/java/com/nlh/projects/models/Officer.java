@@ -1,19 +1,21 @@
 package com.nlh.projects.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@Entity(name = "project_officer")
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "project_officer")
 public class Officer {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String customer1;
     private String customer2;

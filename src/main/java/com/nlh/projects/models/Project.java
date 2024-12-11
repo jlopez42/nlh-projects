@@ -1,36 +1,42 @@
 package com.nlh.projects.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
 @Builder
-@Entity(name = "projects")
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "projects")
 public class Project {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
     private Date startDate;
-    @OneToOne
-    @JoinColumn(name = "general_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "id")
     private General general;
 
-    @OneToOne
-    @JoinColumn(name = "detail_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "id")
     private Detail detail;
 
-    @OneToOne
-    @JoinColumn(name = "officer_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "id")
     private Officer officer;
 
-    @OneToOne
-    @JoinColumn(name = "extra_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "id")
     private Extra extra;
     private Date createdAt;
     private Date updatedAt;
