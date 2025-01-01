@@ -2,28 +2,26 @@ package com.nlh.projects.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "project_officer")
-public class Officer {
+@Table(name = "project_type_staff")
+public class TypeStaff {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id", cascade = CascadeType.ALL)
-    private List<OfficerStaff> officers;
+
     @NotBlank
-    private String contact;
-    @OneToOne(mappedBy = "officer")
-    private Project project;
+    @Size(max = 100)
+    private String description;
+
 }

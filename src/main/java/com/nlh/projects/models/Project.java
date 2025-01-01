@@ -1,6 +1,5 @@
 package com.nlh.projects.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -27,27 +26,29 @@ public class Project {
     private Long id;
 
     @NotBlank
-    @Size(max = 50)
+    @Size(max = 100)
     private String name;
+    @NotBlank
+    @Size(max = 255)
+    private String description;
 
     @NotBlank
-    @Size(max = 200)
-    private String description;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date startDate;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @JoinColumn(name = "general_id")
     private General general;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @JoinColumn(name = "detail_id")
     private Detail detail;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @JoinColumn(name = "officer_id")
     private Officer officer;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @JoinColumn(name = "extra_id")
     private Extra extra;
     @CreationTimestamp
     @DateTimeFormat(pattern = "dd/MM/yyyy")
@@ -56,4 +57,23 @@ public class Project {
     @UpdateTimestamp
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date updatedAt;
+
+    @Column(name = "enable")
+    private Boolean enable;
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", startDate=" + startDate +
+                ", general=" + general +
+                ", detail=" + detail +
+                ", officer=" + officer +
+                ", extra=" + extra +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }
