@@ -1,43 +1,106 @@
 package com.nlh.projects.service;
 
-import com.nlh.projects.models.Project;
 import com.nlh.projects.payloads.request.ProjectRequest;
 import com.nlh.projects.payloads.response.ProjectResponse;
 import com.nlh.projects.payloads.response.Projects;
+import com.nlh.projects.repository.ProjectDetailAreaRepository;
+import com.nlh.projects.repository.ProjectOfficerStaffRepository;
 import com.nlh.projects.repository.ProjectRepository;
+import com.nlh.projects.repository.entity.Project;
+import com.nlh.projects.repository.entity.ProjectTypeStaff;
 import com.nlh.projects.util.WrapperProject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class ProjectService {
 
     @Autowired
-    private ProjectRepository repository;
+    private final ProjectRepository repository;
 
-    public ProjectService(ProjectRepository repository) {
+    @Autowired
+    private final ProjectDetailAreaRepository detailAreaRepository;
+
+    @Autowired
+    private final ProjectOfficerStaffRepository officerStaffRepository;
+
+    public ProjectService(ProjectRepository repository, ProjectDetailAreaRepository detailAreaRepository, ProjectOfficerStaffRepository officerStaffRepository) {
         this.repository = repository;
+        this.detailAreaRepository = detailAreaRepository;
+        this.officerStaffRepository = officerStaffRepository;
     }
+
     public ProjectResponse newProject(ProjectRequest request){
         ProjectResponse response =new ProjectResponse();
         try {
           if (!repository.existsByName(request.getProject().getName())) {
-              Project project = repository.save(request.getProject());
-              response.setMessage("The project has been created successfully");
-              response.setCode(HttpStatus.CREATED.toString());
-              response.setProjectList(List.of(new Projects(
-                      project.getId(),
-                      project.getName(),
-                      project.getCreatedAt())));
+              Project project = repository.save(WrapperProject.projectFrom(request.getProject()));
+              if (saveDetailAreas(project) && saveDetailOfficer(project) ){
+                  response.setMessage("The project has been created successfully");
+                  response.setCode(HttpStatus.CREATED.toString());
+                  response.setProjectList(List.of(new Projects(
+                          project.getId(),
+                          project.getName(),
+                          Date.from(project.getCreatedAt()))));
+              } else {
+                  response.setMessage("The project has been created with saving details areas and officers");
+                  response.setCode(HttpStatus.CONTINUE.toString());
+                  response.setProjectList(List.of(new Projects(
+                          project.getId(),
+                          project.getName(),
+                          Date.from(project.getCreatedAt()))));
+              }
+          } else {
+              response.setMessage("The project has just been created previously");
+              response.setCode(HttpStatus.ACCEPTED.toString());
           }
       } catch (Exception exception) {
           return new ProjectResponse("Error::Creating project::" + exception.getMessage(), HttpStatus.CONFLICT.toString());
       }
         return response;
+    }
+
+    private boolean saveDetailAreas(Project project) {
+        try {
+            if(Objects.nonNull(project)){
+                //insert Detail Areas
+                project.getProjectDetails().getProjectDetailAreas().forEach(area -> {
+                    area.setProjectDetails(project.getProjectDetails());
+                    detailAreaRepository.save(area);
+                });
+            }
+        }catch (Exception exception) {
+            System.out.println(exception.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    private boolean saveDetailOfficer(Project project) {
+        try {
+            if(Objects.nonNull(project)){
+                //insert Officers
+                project.getProjectOfficers().getProjectOfficerStaffs().forEach(staff -> {
+                    staff.setName(staff.getName());
+                    staff.setProjectOfficer(project.getProjectOfficers());
+                    ProjectTypeStaff projectTypeStaff = new ProjectTypeStaff();
+
+                    projectTypeStaff.setId(staff.getId());
+                    staff.setTypeStaff(projectTypeStaff);
+                    officerStaffRepository.save(staff);
+                });
+            }
+        }catch (Exception exception) {
+            System.out.println(exception.getMessage());
+            return false;
+        }
+        return true;
     }
 
     public ProjectResponse updateProject(ProjectRequest project, Long projectId) {
@@ -52,7 +115,7 @@ public class ProjectService {
                 response.setProjectList(List.of(new Projects(
                         projectUpdate.getId(),
                         projectUpdate.getName(),
-                        projectUpdate.getUpdatedAt())));
+                        Date.from(projectUpdate.getUpdatedAt()))));
             }
         } catch (Exception exception) {
             return new ProjectResponse("Error::Updating project::" + exception.getMessage(), HttpStatus.CONFLICT.toString());
@@ -71,7 +134,7 @@ public class ProjectService {
                 response.setProjectList(List.of(new Projects(
                         project.get().getId(),
                         project.get().getName(),
-                        project.get().getUpdatedAt())));
+                        Date.from(project.get().getUpdatedAt()))));
             } else {
                 response.setMessage("Don't found project with id "+ projectId);
                 response.setCode(HttpStatus.OK.toString());
@@ -93,7 +156,7 @@ public class ProjectService {
                 response.setProjectList(List.of(new Projects(
                         project.get().getId(),
                         project.get().getName(),
-                        project.get().getCreatedAt())));
+                        Date.from(project.get().getCreatedAt()))));
             } else {
                 response.setMessage("Project not found successfully by id " + projectId);
                 response.setCode(HttpStatus.OK.toString());

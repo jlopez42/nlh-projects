@@ -1,7 +1,7 @@
 package com.nlh.projects.models;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,17 +13,12 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "project_officer")
 public class Officer {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id", cascade = CascadeType.ALL)
+    @NotNull
     private List<OfficerStaff> officers;
+
     @NotBlank
     private String contact;
-    @OneToOne(mappedBy = "officer")
-    private Project project;
+
 }

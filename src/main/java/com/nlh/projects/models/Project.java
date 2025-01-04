@@ -1,7 +1,7 @@
 package com.nlh.projects.models;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,13 +17,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "projects")
 public class Project {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @NotBlank
     @Size(max = 100)
@@ -35,21 +29,19 @@ public class Project {
     @NotBlank
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date startDate;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "general_id")
+
+    @NotNull
     private General general;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "detail_id")
+    @NotNull
     private Detail detail;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "officer_id")
+    @NotNull
     private Officer officer;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "extra_id")
+    @NotBlank
     private Extra extra;
+
     @CreationTimestamp
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date createdAt;
@@ -58,13 +50,12 @@ public class Project {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date updatedAt;
 
-    @Column(name = "enable")
+    @NotBlank
     private Boolean enable;
 
     @Override
     public String toString() {
         return "Project{" +
-                "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", startDate=" + startDate +
