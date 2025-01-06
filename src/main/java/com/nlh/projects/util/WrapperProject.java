@@ -18,8 +18,11 @@ public abstract class WrapperProject {
 
     public static List<Projects> convertTo (List<Project> projectList){
         List<Projects> projects = new ArrayList<>();
-        projectList.forEach(project -> projects.add(new Projects(project.getId(),
-                project.getName(), Date.from(project.getCreatedAt()))));
+        projectList.forEach(project ->{
+            if(Objects.nonNull(project.getCreatedAt())) {
+                projects.add(new Projects(project.getId(), project.getName(), Date.from(project.getCreatedAt())));
+            }
+        });
         return projects;
     }
 
@@ -108,4 +111,63 @@ public abstract class WrapperProject {
         Instant instant = date.toInstant();
         return instant.atZone(ZoneId.systemDefault()).toLocalDate();
     }
+
+
+    public static Project projectUpdateFrom(Project projectCreated, Project projectUpgrade) {
+        projectCreated.setName(projectUpgrade.getName());
+        projectCreated.setDescription(projectUpgrade.getDescription());
+        projectCreated.setStartDate(projectUpgrade.getStartDate());
+        projectCreated.setEnable(projectUpgrade.getEnable());
+        projectCreated.setProjectGenerals(generalUpdateFrom(projectCreated.getProjectGenerals(),projectUpgrade.getProjectGenerals()));
+        // projectCreated.setProjectDetails(detailUpdateFrom(projectCreated.getProjectDetails(),projectUpgrade.getProjectDetails()));
+        projectCreated.setProjectExtras(extraUpdateFrom(projectCreated.getProjectExtras(), projectUpgrade.getProjectExtras()));
+        // projectCreated.setProjectOfficers(officerUpdateFrom(projectCreated.getProjectOfficers(), projectUpgrade.getProjectOfficers()));
+        return projectCreated;
+    }
+
+    private static ProjectOfficer officerUpdateFrom(ProjectOfficer created, ProjectOfficer upgrade) {
+        return created;
+    }
+
+    private static ProjectExtra extraUpdateFrom(ProjectExtra created, ProjectExtra upgrade) {
+        created.setAdditional(upgrade.getAdditional());
+        return created;
+    }
+
+    private static ProjectDetail detailUpdateFrom(ProjectDetail created, ProjectDetail update) {
+        created.setType(update.getType());
+        created.setQuantity(update.getQuantity());
+        created.setSurface(update.getSurface());
+        created.setRawMaterial(update.getRawMaterial());
+        created.setFlats(update.getFlats());
+        created.setProjectDetailAreas(projectDetailAreaUpdateFrom(created.getProjectDetailAreas(),update.getProjectDetailAreas()));
+        return created;
+    }
+
+
+    private static Set<ProjectDetailArea> projectDetailAreaUpdateFrom(Set<ProjectDetailArea> areasCreated, Set<ProjectDetailArea> areasUpgrade) {
+        List<ProjectDetailArea> created = new ArrayList<>(areasCreated);
+        List<ProjectDetailArea> upgrade = new ArrayList<>(areasUpgrade);
+
+        int sizeAreasCreated = created.size();
+        int sizeAreasUpgrade = upgrade.size();
+
+        if (sizeAreasCreated == sizeAreasUpgrade) {
+            for (int i = 0; i < created.size(); i++) {
+                created.get(i).setDescription(upgrade.get(i).getDescription());
+            }
+        } else if (sizeAreasCreated < sizeAreasUpgrade) {
+
+        } else {
+
+        }
+
+        return Set.copyOf(created);
+    }
+    private static ProjectGeneral generalUpdateFrom(ProjectGeneral created, ProjectGeneral updated) {
+        created.setDescription(updated.getDescription());
+        created.setLocation(updated.getLocation());
+        return created;
+    }
+
 }

@@ -36,6 +36,11 @@ public class ProjectService {
         this.officerStaffRepository = officerStaffRepository;
     }
 
+    /**
+     * Method used to create new projects
+     * @param request
+     * @return
+     */
     public ProjectResponse newProject(ProjectRequest request){
         ProjectResponse response =new ProjectResponse();
         try {
@@ -108,8 +113,8 @@ public class ProjectService {
         try {
             Optional<Project> projectCreated = repository.findById(projectId);
             if (projectCreated.isPresent()) {
-                projectCreated.get().setName(project.getProject().getName());
-                Project projectUpdate = repository.save(projectCreated.get());
+                Project projectUpgrade = WrapperProject.projectFrom(project.getProject());
+                Project projectUpdate = repository.save(WrapperProject.projectUpdateFrom(projectCreated.get(), projectUpgrade));
                 response.setMessage("The project has been updated successfully");
                 response.setCode(HttpStatus.OK.toString());
                 response.setProjectList(List.of(new Projects(
