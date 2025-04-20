@@ -1,7 +1,7 @@
 package com.nlh.projects.util;
 
-import com.nlh.projects.models.*;
-import com.nlh.projects.payloads.response.Projects;
+import com.nlh.projects.models.project.*;
+import com.nlh.projects.payloads.project.response.Projects;
 import com.nlh.projects.repository.entity.*;
 import com.nlh.projects.repository.entity.Project;
 import jakarta.validation.constraints.NotBlank;
@@ -26,7 +26,7 @@ public abstract class WrapperProject {
         return projects;
     }
 
-    public static Project projectFrom (com.nlh.projects.models.Project modelProject){
+    public static Project projectFrom (com.nlh.projects.models.project.Project modelProject){
         Project entity = new Project();
         entity.setName(modelProject.getName());
         entity.setDescription(modelProject.getDescription());

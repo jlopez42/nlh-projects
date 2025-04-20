@@ -1,7 +1,7 @@
 package com.nlh.projects.controller;
 
-import com.nlh.projects.payloads.request.ProjectRequest;
-import com.nlh.projects.payloads.response.ProjectResponse;
+import com.nlh.projects.payloads.project.request.ProjectRequest;
+import com.nlh.projects.payloads.project.response.ProjectResponse;
 import com.nlh.projects.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

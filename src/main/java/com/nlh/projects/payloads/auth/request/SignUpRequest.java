@@ -1,0 +1,33 @@
+package com.nlh.projects.payloads.auth.request;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Set;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class SignUpRequest {
+
+    @NotBlank
+    @Size(min = 8, max = 12)
+    private String username;
+    private String firstName;
+    private String lastName;
+    @NotBlank
+    @Size(max = 100)
+    @Email
+    private String email;
+
+    @NotBlank
+    @Size(min = 8, max = 15)
+    private String password;
+    private Set<String> role;
+}
